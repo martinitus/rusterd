@@ -1,0 +1,9 @@
+[package]
+name = "rusterd"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["rusterd contributors"]
+description = "Embed rusterd ER diagrams directly in Typst documents."
+license = "MIT"
+repository = "https://github.com/misebox/rusterd"
+keywords = ["erd", "diagram", "database", "svg"]

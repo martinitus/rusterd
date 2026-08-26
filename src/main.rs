@@ -2,7 +2,7 @@ use rusterd::ir::{DetailLevel, GraphIR};
 use rusterd::layout::LayoutEngine;
 use rusterd::parser::Parser;
 use rusterd::serializer;
-use rusterd::sql::{parse_sql, Dialect};
+use rusterd::sql::{Dialect, parse_sql};
 use rusterd::svg::{Notation, SvgRenderer};
 use std::env;
 use std::fs;
@@ -51,7 +51,10 @@ fn print_usage(program: &str) {
     eprintln!("  render   Render ERD file to SVG");
     eprintln!("  convert  Convert SQL dump to ERD notation");
     eprintln!();
-    eprintln!("Run '{} <subcommand> --help' for more information.", program);
+    eprintln!(
+        "Run '{} <subcommand> --help' for more information.",
+        program
+    );
 }
 
 fn run_render(program: &str, args: &[String]) {
@@ -65,7 +68,9 @@ fn run_render(program: &str, args: &[String]) {
         eprintln!("  -o, --output <file>   Output file (default: stdout)");
         eprintln!("  -v, --view <name>     Render specific view");
         eprintln!("  -d, --detail <level>  Detail level: tables, pk, pk_fk, all (default: all)");
-        eprintln!("  -n, --notation <n>    Cardinality notation: crowsfoot, text (default: crowsfoot)");
+        eprintln!(
+            "  -n, --notation <n>    Cardinality notation: crowsfoot, text (default: crowsfoot)"
+        );
         if args.is_empty() {
             process::exit(1);
         }
@@ -188,7 +193,9 @@ fn run_convert(program: &str, args: &[String]) {
         eprintln!();
         eprintln!("Options:");
         eprintln!("  -o, --output <file>      Output file (default: stdout)");
-        eprintln!("  -d, --dialect <dialect>  SQL dialect: auto, generic, postgres, mysql (default: auto)");
+        eprintln!(
+            "  -d, --dialect <dialect>  SQL dialect: auto, generic, postgres, mysql (default: auto)"
+        );
         if args.is_empty() {
             process::exit(1);
         }

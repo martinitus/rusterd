@@ -127,13 +127,53 @@ erdToSvg(source);                        // SVG markup for the whole diagram
 erdToSvg(source, 'simple');              // a named view
 erdToSvg(source, null, 'pk_fk');         // a detail level
 erdToSvg(source, null, null, 'text');    // text cardinalities, not crow's foot
-erdToDataUri(source);              // data: URI, ready for <img src={...}>
-sqlToErd(sqlDump, 'postgres');     // SQL dump -> ERD notation
-sqlToSvg(sqlDump, 'postgres');     // SQL dump -> SVG
+erdToDataUri(source);                   // data: URI, ready for <img src={...}>
+sqlToErd(sqlDump, 'postgres');          // SQL dump -> ERD notation
+sqlToSvg(sqlDump, 'postgres');          // SQL dump -> SVG
 ```
 
 Every argument after the source is optional and accepts `null`. Errors (parse
 failures, unknown view names) are thrown as strings.
+
+## Typst Usage
+
+`rusterd` includes a Typst package under `typst-plugin/`. It is a real Typst
+plugin: the WASM module parses and renders the ERD source inside Typst, while
+`lib.typ` exposes the `erd` function. It does not generate a separate Typst
+source file or require the CLI at document-generation time.
+
+Build the plugin from the repository root:
+
+```bash
+rustup target add wasm32-unknown-unknown
+cargo build --release --target wasm32-unknown-unknown \
+  --manifest-path typst-plugin/Cargo.toml
+cp target/wasm32-unknown-unknown/release/rusterd_typst.wasm \
+  typst-plugin/rusterd.wasm
+```
+
+For local use, import the wrapper after building the artifact. The WASM file
+must remain next to `lib.typ`:
+
+```typst
+#import "typst-plugin/lib.typ": erd
+
+#erd(`
+entity User {
+    id int pk
+    email string unique not null
+}
+`, width: 100%)
+```
+
+The first argument may be a Typst raw text literal, as shown above, or a
+string. Optional `view`, `detail` (`tables`, `pk`, `pk_fk`, or `all`),
+`notation` (`crowsfoot` or `text`), and `width` arguments are supported. When
+published as a Typst package, the equivalent import is:
+
+```typst
+#import "@preview/rusterd:0.1.0": erd
+```
 
 ## Rust Library Usage
 
@@ -158,7 +198,9 @@ to ERD direction.
 
 ```bash
 cargo test                    # includes routing checks over examples/
-bin/build                     # release binary + wasm-pack build
+bin/build                     # release binary + browser wasm-pack build
+cargo build --release --target wasm32-unknown-unknown --manifest-path typst-plugin/Cargo.toml
+cp target/wasm32-unknown-unknown/release/rusterd_typst.wasm typst-plugin/rusterd.wasm
 bin/svg examples/sample.erd   # render one file next to its source
 bin/dev                       # render every example
 bin/docs                      # regenerate the diagrams in this README

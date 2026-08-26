@@ -6,3 +6,6 @@ tmp/
 .DS_Store
 examples/*.svg
 pkg/
+
+# Generated Typst plugin artifact; build it with the command in README.md.
+typst-plugin/rusterd.wasm
