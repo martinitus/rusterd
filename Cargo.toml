@@ -14,6 +14,9 @@ exclude = ["demo", "bin", "docs/sample.svg", ".github", "issues.md"]
 crate-type = ["cdylib", "rlib"]
 
 [features]
+# Keep the browser API enabled by default for existing consumers. Downstream
+# wrappers that use rusterd's core modules directly can disable it to avoid
+# depending on wasm-bindgen and js-sys.
 default = ["wasm-api"]
 wasm-api = [
     "dep:wasm-bindgen",
